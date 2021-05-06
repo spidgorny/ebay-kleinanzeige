@@ -26,11 +26,12 @@ async function fetchDescription(href: string) {
 	const title = $('h1#viewad-title').text().trim();
 	const price = $('h2.boxedarticle--price').text().trim();
 	const locality = $('span#viewad-locality').text().trim();
-	const description = $('p#viewad-description-text').html()?.replaceAll('<br>', "\n").trim();
-	const isBosch = description?.includes('Bosch');
-	const words = description?.split(' ');
+	let sDescription = $('p#viewad-description-text').html()?.replaceAll('<br>', "\n").split("\n").filter(x => x.trim()).map(x => x.trim()).join("\n");
+	const isBosch = sDescription?.includes('Bosch');
+	const words = sDescription?.split(' ');
 	const years = words?.filter(x => x.length === 4 && x.startsWith('20')) ?? [];
-	return {$, title, detailURL, price, locality, description, isBosch, years};
+	const description = sDescription?.split("\n");
+	return {$, title, detailURL, price, locality, description: description, isBosch, years};
 }
 
 async function main() {

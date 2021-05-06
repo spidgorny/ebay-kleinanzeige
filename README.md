@@ -1,21 +1,32 @@
 ```
-== Explorer Pedelec City E-Bike 100
+== Hercules Robert 8 Pro E-Bike
 {
-  title: 'Explorer Pedelec City E-Bike 100',
-  detailURL: 'https://www.ebay-kleinanzeigen.de/s-anzeige/explorer-pedelec-city-e-bike-100/1695614874
--217-4287',
-  price: '670 €',
-  locality: '63456 Hessen - Hanau',
-  description: 'Letzte Chance zugreifen das Angebot wird am 1.Mai beendet\n' +
-    '\n' +
-    'Pedelec City E-Bike\n' +
-    'Akku wurde 2019 erneuert\n' +
-    'Motor regelt bei 25 Km/h ab\n' +
-    'Drehgeberscheibe wurde erneuert.\n' +
-    'Bei Fragen gerne anschreiben\n' +
-    'Probefahrt kann vor Ort durchgeführt werden.',
-  isBosch: false,
-  years: [ '2019' ]
+  title: 'Hercules Robert 8 Pro E-Bike',
+  detailURL: 'https://www.ebay-kleinanzeigen.de/s-anzeige/hercules-robert-8-pro-e-bike/1708009361-217
+-4579',
+  price: '950 € VB',
+  locality: '61449 Hessen - Steinbach',
+  description: [
+    'Verkaufe hier ein neuwertiges E-Bike Hercules Robert 8 pro. Das Ebike wurde kaum gefahren und ha
+t nur 600 km drauf.',
+    '-28Zoll',
+    '-8 Gänge Nabenschaltung Shimano',
+    '-Modelljahr 2013',
+    '-Akku 250W 36V',
+    '-Hydraulische Felgenbremse',
+    '-kein Rücktrittbremse',
+    '-Akku Reichweite ca 110km',
+    '-Rahmengröße 52cm',
+    '-Mittelmotor Bosch',
+    '-vorne Federung',
+    '-Sicherheitsschloss',
+    '-Display Bosch',
+    '-fährt bis 25kmh',
+    '-Bedienungsanleitung',
+    '- Rechnung dabei 2014 gekauft',
+    'Privatverkauf! Keine Garantie und Rücknahme'
+  ],
+  isBosch: true,
+  years: [ '2014' ]
 }
-
 ```
