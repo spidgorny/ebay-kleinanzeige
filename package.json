@@ -7,6 +7,8 @@
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.9",
     "memoize-fs": "^2.2.0",
+    "moment": "^2.29.1",
+    "node-url-shortener": "^1.1.11",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   },
@@ -15,6 +17,7 @@
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.28",
+    "@types/moment": "^2.13.0",
     "prettier": "^2.2.1"
   }
 }
