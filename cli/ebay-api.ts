@@ -2,17 +2,21 @@ import axios from "axios";
 import cheerio from "cheerio";
 import memoizeFs from "memoize-fs";
 
-let memoOptions = {cachePath: '.cache'};
-const memoizer = memoizeFs(memoOptions)
 const shortUrl = require('node-url-shortener');
 import Cheerio = cheerio.Cheerio;
 import Root = cheerio.Root;
 
 export const DEVELOPMENT = process.env.NODE_ENV === 'development';
+
 let fetchHTML = async (searchURL) => {
+	console.log('fetching', {searchURL});
 	return (await axios.get(searchURL)).data;
 };
-const makeFetchMem = async () => memoizer.fn(fetchHTML);
+const makeFetchMem = async () => {
+	let memoOptions = {cachePath: '.cache'};
+	const memoizer = memoizeFs(memoOptions);
+	return await memoizer.fn(fetchHTML);
+}
 
 export async function getList(page: number) {
 	const fetchMem = DEVELOPMENT ? await makeFetchMem() : fetchHTML;
@@ -34,13 +38,9 @@ export async function getList(page: number) {
 // copy from above
 export async function getNew(page: number) {
 	const fetchMem = DEVELOPMENT ? await makeFetchMem() : fetchHTML;
-	const seite = page > 1 ? `seite:${page}/` : '';
 	let searchURL =
-		`https://www.ebay-kleinanzeigen.de/s-fahrraeder/damen/60435/anbieter:privat/anzeige:angebote/preis:600:1000/c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike
-		/anzeige:angebote/preis:600:1000/${seite}c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike`;
+		`https://www.ebay-kleinanzeigen.de/s-fahrraeder/damen/60435/anbieter:privat/anzeige:angebote/preis:600:1000/c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike`;
 	// @ts-ignore
-	const cacheFile = memoizer.getCacheFilePath(fetchHTML, [searchURL], {...memoOptions, cacheId: './'});
-	// console.log({page, cacheFile});
 	const html = await fetchMem(searchURL);
 	const {links} = await parseList(html);
 	return {
@@ -68,7 +68,7 @@ export async function fetchDescription(href: string) {
 	const homepage = 'https://www.ebay-kleinanzeigen.de/';
 	const detailURL = new URL(href, homepage).toString();
 	// console.log({detailURL});
-	const fetchMem = await memoizer.fn(async (detailURL) => (await axios.get(detailURL)).data);
+	const fetchMem = DEVELOPMENT ? await makeFetchMem() : fetchHTML;
 	const html = await fetchMem(detailURL);
 	const $: Root = cheerio.load(html);
 	const title = $('h1#viewad-title').text().trim();
