@@ -5,7 +5,7 @@ import style from './style.css';
 const Header: FunctionalComponent = () => {
     return (
         <header class={style.header}>
-            <h1>Ebay Bikes</h1>
+            <h1><a href=".">Ebay Bikes</a></h1>
             <nav>
                 <Link activeClassName={style.active} href="/">
                     Home
