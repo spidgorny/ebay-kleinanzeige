@@ -1,5 +1,5 @@
 module.exports = function(config) {
-	config.devServer = config.devServer ?? {};
+	config.devServer = config.devServer || {};
 	config.devServer.proxy = [
 		{
 			// proxy requests matching a pattern:
