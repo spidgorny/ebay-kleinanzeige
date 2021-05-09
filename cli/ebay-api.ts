@@ -20,7 +20,7 @@ export async function getList(page: number) {
 	let searchURL =
 		`https://www.ebay-kleinanzeigen.de/s-fahrraeder/damen/60435/sortierung:entfernung/anbieter:privat/anzeige:angebote/preis:600:1000/${seite}c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike`;
 	// @ts-ignore
-	const cacheFile = memoizer.getCacheFilePath(fetchHTML, [searchURL], {...memoOptions, cacheId: './'});
+	// const cacheFile = memoizer.getCacheFilePath(fetchHTML, [searchURL], {...memoOptions, cacheId: './'});
 	// console.log({page, cacheFile});
 	const html = await fetchMem(searchURL);
 	const {links} = await parseList(html);
@@ -33,7 +33,7 @@ export async function getList(page: number) {
 
 // copy from above
 export async function getNew(page: number) {
-	const fetchMem = await makeFetchMem();
+	const fetchMem = DEVELOPMENT ? await makeFetchMem() : fetchHTML;
 	const seite = page > 1 ? `seite:${page}/` : '';
 	let searchURL =
 		`https://www.ebay-kleinanzeigen.de/s-fahrraeder/damen/60435/anbieter:privat/anzeige:angebote/preis:600:1000/c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike

@@ -9,9 +9,10 @@ const handler: Handler = async (event, context) => {
 	const page = event.queryStringParameters.page
 		// @ts-ignore
 		? parseInt(event.queryStringParameters.page) : 1;
-	const {searchURL, links} = await getNew(page);
+	const {DEVELOPMENT, searchURL, links} = await getNew(page);
 	return {
 		statusCode: 200, body: JSON.stringify({
+			DEVELOPMENT,
 			searchURL,
 			links,
 			duration: moment().diff(start) / 1000,
@@ -20,4 +21,3 @@ const handler: Handler = async (event, context) => {
 }
 
 export {handler};
-
