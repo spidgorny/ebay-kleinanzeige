@@ -8,13 +8,14 @@ const shortUrl = require('node-url-shortener');
 import Cheerio = cheerio.Cheerio;
 import Root = cheerio.Root;
 
+export const DEVELOPMENT = process.env.NODE_ENV === 'development';
 let fetchHTML = async (searchURL) => {
 	return (await axios.get(searchURL)).data;
 };
 const makeFetchMem = async () => memoizer.fn(fetchHTML);
 
 export async function getList(page: number) {
-	const fetchMem = await makeFetchMem();
+	const fetchMem = DEVELOPMENT ? await makeFetchMem() : fetchHTML;
 	const seite = page > 1 ? `seite:${page}/` : '';
 	let searchURL =
 		`https://www.ebay-kleinanzeigen.de/s-fahrraeder/damen/60435/sortierung:entfernung/anbieter:privat/anzeige:angebote/preis:600:1000/${seite}c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike`;
@@ -22,9 +23,15 @@ export async function getList(page: number) {
 	const cacheFile = memoizer.getCacheFilePath(fetchHTML, [searchURL], {...memoOptions, cacheId: './'});
 	// console.log({page, cacheFile});
 	const html = await fetchMem(searchURL);
-	return parseList(searchURL, html);
+	const {links} = await parseList(html);
+	return {
+		DEVELOPMENT,
+		searchURL,
+		links,
+	};
 }
 
+// copy from above
 export async function getNew(page: number) {
 	const fetchMem = await makeFetchMem();
 	const seite = page > 1 ? `seite:${page}/` : '';
@@ -35,10 +42,15 @@ export async function getNew(page: number) {
 	const cacheFile = memoizer.getCacheFilePath(fetchHTML, [searchURL], {...memoOptions, cacheId: './'});
 	// console.log({page, cacheFile});
 	const html = await fetchMem(searchURL);
-	return parseList(searchURL, html);
+	const {links} = await parseList(html);
+	return {
+		DEVELOPMENT,
+		searchURL,
+		links,
+	};
 }
 
-async function parseList(searchURL: string, html: string) {
+async function parseList(html: string) {
 	const $: Root = cheerio.load(html);
 	const li = $('ul#srchrslt-adtable li');
 	const results: any[] = li.toArray();
@@ -49,7 +61,7 @@ async function parseList(searchURL: string, html: string) {
 		// console.log({href});
 		return href;
 	}).filter(x => x);
-	return {$, results, searchURL, links};
+	return {$, results, links};
 }
 
 export async function fetchDescription(href: string) {
