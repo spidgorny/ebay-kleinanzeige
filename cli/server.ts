@@ -1,6 +1,6 @@
 import {FastifyReply, FastifyRequest} from "fastify";
 import moment from "moment";
-import {fetchDescription, getList} from "./ebay-api";
+import {fetchDescription, getList, getNew} from "./ebay-api";
 
 const fastify = require('fastify');
 const app = fastify({
@@ -17,13 +17,34 @@ app.get('/api', async (req: FastifyRequest, reply: FastifyReply) => {
 });
 
 app.get('/api/list', async (req: FastifyRequest, reply: FastifyReply) => {
+	const start = moment();
 	try {
 		// @ts-ignore
 		const page = req.query.page;
 		const {searchURL, links} = await getList(page);
 		return {
 			searchURL,
-			links
+			links,
+			duration: moment().diff(start)/1000,
+		};
+	} catch (e) {
+		console.error(e);
+		reply.code(500).send({
+			status: e.message
+		})
+	}
+});
+
+app.get('/api/new', async (req: FastifyRequest, reply: FastifyReply) => {
+	const start = moment();
+	try {
+		// @ts-ignore
+		const page = req.query.page;
+		const {searchURL, links} = await getNew(page);
+		return {
+			searchURL,
+			links,
+			duration: moment().diff(start)/1000,
 		};
 	} catch (e) {
 		console.error(e);

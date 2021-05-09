@@ -8,12 +8,13 @@ const shortUrl = require('node-url-shortener');
 import Cheerio = cheerio.Cheerio;
 import Root = cheerio.Root;
 
-export async function getList(page: number) {
-	let fetchHTML = async (searchURL) => {
-		return (await axios.get(searchURL)).data;
-	};
-	const fetchMem = await memoizer.fn(fetchHTML);
+let fetchHTML = async (searchURL) => {
+	return (await axios.get(searchURL)).data;
+};
+const makeFetchMem = async () => memoizer.fn(fetchHTML);
 
+export async function getList(page: number) {
+	const fetchMem = await makeFetchMem();
 	const seite = page > 1 ? `seite:${page}/` : '';
 	let searchURL =
 		`https://www.ebay-kleinanzeigen.de/s-fahrraeder/damen/60435/sortierung:entfernung/anbieter:privat/anzeige:angebote/preis:600:1000/${seite}c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike`;
@@ -21,6 +22,23 @@ export async function getList(page: number) {
 	const cacheFile = memoizer.getCacheFilePath(fetchHTML, [searchURL], {...memoOptions, cacheId: './'});
 	// console.log({page, cacheFile});
 	const html = await fetchMem(searchURL);
+	return parseList(searchURL, html);
+}
+
+export async function getNew(page: number) {
+	const fetchMem = await makeFetchMem();
+	const seite = page > 1 ? `seite:${page}/` : '';
+	let searchURL =
+		`https://www.ebay-kleinanzeigen.de/s-fahrraeder/damen/60435/anbieter:privat/anzeige:angebote/preis:600:1000/c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike
+		/anzeige:angebote/preis:600:1000/${seite}c217l4328r100+fahrraeder.art_s:damen+fahrraeder.type_s:ebike`;
+	// @ts-ignore
+	const cacheFile = memoizer.getCacheFilePath(fetchHTML, [searchURL], {...memoOptions, cacheId: './'});
+	// console.log({page, cacheFile});
+	const html = await fetchMem(searchURL);
+	return parseList(searchURL, html);
+}
+
+async function parseList(searchURL: string, html: string) {
 	const $: Root = cheerio.load(html);
 	const li = $('ul#srchrslt-adtable li');
 	const results: any[] = li.toArray();
