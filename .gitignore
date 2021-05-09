@@ -3,3 +3,7 @@ node_modules/
 .cache/
 /build
 /*.log
+size-plugin.json
+
+# Local Netlify folder
+.netlify
