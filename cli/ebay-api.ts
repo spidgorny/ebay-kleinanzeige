@@ -8,10 +8,11 @@ import Root = cheerio.Root;
 
 export const DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-let fetchHTML = async (searchURL) => {
+async function fetchHTML(searchURL) {
 	console.log('fetching', {searchURL});
 	return (await axios.get(searchURL)).data;
-};
+}
+
 const makeFetchMem = async () => {
 	let memoOptions = {cachePath: '.cache'};
 	const memoizer = memoizeFs(memoOptions);

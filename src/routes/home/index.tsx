@@ -3,6 +3,11 @@ import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
 import axios from "axios";
 
+const isNetlify = () => document.location.host.includes('netlify');
+
+const api = (endpoint: string) => isNetlify() ? '/.netlify/functions/' + endpoint:
+	'/api/' + endpoint;
+
 const Home: FunctionalComponent = () => {
 
 	return (
@@ -23,7 +28,7 @@ function Page(props: { page: number }) {
 	}, []);
 
 	const fetchData = async () => {
-		const res = await axios.get('/api/list?page=' + props.page);
+		const res = await axios.get(api('list?page=' + props.page));
 		setData(res.data);
 	};
 	return <div>
@@ -32,7 +37,7 @@ function Page(props: { page: number }) {
 			<a href={data.searchURL}>{data.searchURL}</a>
 		</div>
 		<div>
-		{data.links.map(href => <OneBike href={href}/>)}</div>
+			{data.links.map(href => <OneBike href={href}/>)}</div>
 	</div>
 }
 
@@ -44,7 +49,7 @@ function OneBike(props: { href: string }) {
 	}, []);
 
 	const fetchData = async () => {
-		const res = await axios.get('/api/details?url=' + props.href);
+		const res = await axios.get(api('details?url=' + props.href));
 		setData(res.data);
 	};
 
